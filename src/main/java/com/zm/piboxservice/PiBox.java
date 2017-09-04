@@ -14,13 +14,19 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.zm.pibox;
+package com.zm.piboxservice;
 
-import com.google.gson.JsonArray;
-import com.zm.pibox.model.ComponentMessage;
+import com.zm.pblp.model.GeneralLog;
+import com.zm.pblp.client.LogClient;
+import com.zm.pblp.configuration.LogChannel;
+import com.zm.pblp.configuration.LogHost;
+import com.zm.pibox.API;
+import com.zm.pibox.configuration.PiChannel;
+import com.zm.pibox.configuration.PiHost;
 import com.zm.rabbitmqservice.RMQApplicationException;
 import com.zm.rabbitmqservice.RMQApplication;
-import com.zm.rabbitmqservice.RMQClient;
+import com.zm.rpibox.model.ComponentMessage;
+import java.util.UUID;
 
 /**
  *
@@ -28,9 +34,9 @@ import com.zm.rabbitmqservice.RMQClient;
  */
 public class PiBox implements API {
     
-    private final RMQClient client;
+    private final LogClient logClient;
     PiBox() throws Exception {
-         client = new RMQClient("localhost", "logs", 5);
+         logClient = new LogClient(LogHost.LOCAL, LogChannel.LOGS, 5);
     }
     
     private static void daemonize(Runnable r) {
@@ -46,11 +52,13 @@ public class PiBox implements API {
 
     @Override
     public Void testlog(String message) {
-        System.out.println(message);
         try {
-            JsonArray params = new JsonArray();
-            params.add(message);
-            System.out.println(client.call("log", params));
+            
+            GeneralLog log = new GeneralLog();
+            log.setId(UUID.randomUUID().toString());
+            log.setMessage(message);
+            log.setTime(System.currentTimeMillis());
+            logClient.log(log);
             
         } catch (Exception ex) {
             ex.printStackTrace();
@@ -61,11 +69,12 @@ public class PiBox implements API {
 
     @Override
     public String testString(ComponentMessage message) {
-        System.out.println("HA");
         return "Hello!";
     }
     
     public static void main(String[] argv) throws Exception {
-        RMQApplication.start("localhost", "test", new PiBox(), API.class, 5);
+        String host = PiHost.LOCAL.getValue();
+        String channel = PiChannel.TEST.getValue();
+        RMQApplication.start(host, channel, new PiBox(), API.class, 5);
     }
 }
