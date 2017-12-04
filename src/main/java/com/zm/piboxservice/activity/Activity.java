@@ -14,23 +14,20 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.zm.piboxservice;
+package com.zm.piboxservice.activity;
 
-import com.zm.pibox.PiBoxApi;
-import com.zm.pibox.configuration.PiBoxConfiguration;
-import com.zm.piboxservice.service.PiBoxService;
-import com.zm.rabbitmqservice.RMQApplication;
+import com.zm.pbmessenger.PBMessengerClient;
+import com.zm.piboxservice.rpi.GPIO;
+
 
 /**
  *
  * @author zmiller
  */
-public class PiBox {
-    public static void main(String[] argv) throws Exception {
-        String host = PiBoxConfiguration.Host.TEST.getValue();
-        String channel = PiBoxConfiguration.Channel.TEST.getValue();
-        PiBoxService manager = new PiBoxService();
-        new Thread(manager).start();
-        RMQApplication.start(host, channel, manager, PiBoxApi.class, 5);
-    }
+public interface Activity {
+    void call();
+    void pause();
+    void stop();
+    void start();
+    void recover(); // recover from unexpected shutdown
 }
