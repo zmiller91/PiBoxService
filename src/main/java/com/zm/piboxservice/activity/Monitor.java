@@ -1,6 +1,7 @@
 package com.zm.piboxservice.activity;
 
 import com.zm.pbmessenger.PBMessengerClient;
+import com.zm.piboxservice.Messenger;
 import com.zm.piboxservice.rpi.GPIO;
 import com.zm.piboxservice.sensor.Moisture;
 import com.zm.piboxservice.sensor.Photoresistor;
@@ -16,12 +17,14 @@ public class Monitor implements Activity {
     @Override
     public void call() {
         if(System.currentTimeMillis() - time > 3000){
+            StringBuilder sb = new StringBuilder();
+            sb.append("-------------------------\n");
+            sb.append("Photoresistor:   " + round(_photoresistor.read()) + "\n");
+            sb.append("Moisture:        " + round(_moisture.read()) + "\n");
+            sb.append("Temperature:     " + round(_temperature.read()) + "\n");
+            sb.append("-------------------------");
 
-            System.out.println("-------------------------");
-            System.out.println("Photoresistor:   " + round(_photoresistor.read()));
-            System.out.println("Moisture:        " + round(_moisture.read()));
-            System.out.println("Temperature:     " + round(_temperature.read()));
-            System.out.println("-------------------------");
+            Messenger.instance().log(sb.toString());
             time = System.currentTimeMillis();
         }
     }

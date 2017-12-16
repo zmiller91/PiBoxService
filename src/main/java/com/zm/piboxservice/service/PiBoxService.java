@@ -30,7 +30,6 @@ import java.util.*;
 public class PiBoxService implements PiBoxApi, Runnable {
 
     private Configuration _configuration;
-    private PBMessengerClient _pbMessenger;
     private LinkedList<Activity> _activityQueue;
     private LinkedList<Sensor> _sensorQueue;
     private Catalog<Activity> _activityCatalog;
@@ -39,7 +38,6 @@ public class PiBoxService implements PiBoxApi, Runnable {
     public PiBoxService() {
 
         _configuration = Configuration.instance();
-        _pbMessenger = new PBMessengerClient(PBMessengerConfiguration.Host.TEST, PBMessengerConfiguration.Channel.TEST, 10);
         _activityQueue = new LinkedList<>();
         _sensorQueue = new LinkedList<>();
         _activityCatalog = new Catalog<>();
