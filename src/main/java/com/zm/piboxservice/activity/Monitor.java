@@ -18,7 +18,7 @@ public class Monitor extends TimerTask implements Activity {
 
     @Override
     public void run() {
-        if(System.currentTimeMillis() - time > 3000){
+        if(System.currentTimeMillis() - time > 1000){
             StringBuilder sb = new StringBuilder();
             sb.append("-------------------------\n");
             sb.append("Photoresistor:   " + round(_photoresistor.read()) + "\n");

@@ -25,7 +25,7 @@ public class Messenger {
     }
 
     private Messenger() {
-        client = new PBMessengerClient(Host.TEST, Channel.TEST, 10);
+        client = new PBMessengerClient(Host.TEST, Channel.TEST, 5);
     }
 
     public void log(String s) {
