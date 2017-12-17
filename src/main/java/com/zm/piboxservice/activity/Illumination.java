@@ -7,8 +7,9 @@ import com.zm.piboxservice.rpi.PinState;
 import com.zm.piboxservice.sensor.Photoresistor;
 
 import java.time.LocalTime;
+import java.util.TimerTask;
 
-public class Illumination implements Activity {
+public class Illumination extends TimerTask implements Activity {
 
     private LightConfiguration _configuration;
     private DefaultComponent _light;
@@ -26,7 +27,7 @@ public class Illumination implements Activity {
     }
 
     @Override
-    public void call() {
+    public void run() {
 
         /*
          * Consider the two cases:

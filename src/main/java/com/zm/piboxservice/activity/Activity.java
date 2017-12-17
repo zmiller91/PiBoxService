@@ -25,7 +25,6 @@ import com.zm.piboxservice.rpi.GPIO;
  * @author zmiller
  */
 public interface Activity {
-    void call();
     void pause();
     void stop();
     void start();

@@ -1,12 +1,15 @@
 package com.zm.piboxservice.sensor;
 
+import com.zm.piboxservice.activity.SensorListener;
 import com.zm.piboxservice.rpi.GPIO;
 
 import java.util.Random;
+import java.util.TimerTask;
 
-public class Temperature implements Sensor {
+public class Temperature extends TimerTask implements Sensor {
 
     private GPIO _pin;
+    private final SensorListener[] listeners;
     private Random _random;
     private double _temp;
 
@@ -14,9 +17,14 @@ public class Temperature implements Sensor {
     private boolean _cooling;
 
     public Temperature(GPIO pin) {
+        this(pin, new SensorListener[0]);
+    }
+
+    public Temperature(GPIO pin, SensorListener ... listeners) {
         _pin = pin;
         _random = new Random();
         _temp = 75;
+        this.listeners = listeners;
     }
 
     @Override
@@ -25,8 +33,8 @@ public class Temperature implements Sensor {
     }
 
     @Override
-    public void call() {
-        int r = _random.nextInt(10000000);
+    public void run() {
+        int r = _random.nextInt(10);
         if(r == 0) {
            double adj = _random.nextDouble();
            boolean coolingAllowed = !(!_cooling && _heating);
@@ -35,6 +43,9 @@ public class Temperature implements Sensor {
                adj *= -1;
            }
             _temp += adj;
+           for(SensorListener sl : listeners) {
+               sl.onSensorUpdate(this);
+           }
         }
     }
 

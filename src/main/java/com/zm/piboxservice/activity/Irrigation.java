@@ -3,15 +3,14 @@ package com.zm.piboxservice.activity;
 import com.zm.pibox.model.IrrigationConfiguration;
 import com.zm.piboxservice.database.Configuration;
 import com.zm.piboxservice.sensor.Moisture;
+import com.zm.piboxservice.sensor.Sensor;
 
-public class Irrigation implements Activity {
+public class Irrigation implements Activity, SensorListener {
 
-    private Moisture _moisture;
     private IrrigationConfiguration _configuration;
 
-    public Irrigation(IrrigationConfiguration configuration, Moisture moisture) {
+    public Irrigation(IrrigationConfiguration configuration) {
         _configuration = configuration;
-        _moisture = moisture;
     }
 
     public void setIrrigationConfiguration(IrrigationConfiguration configuration) {
@@ -19,10 +18,13 @@ public class Irrigation implements Activity {
     }
 
     @Override
-    public void call() {
-        double density = _moisture.read();
-        if(density < _configuration.getMinimum()) {
-            _moisture.resetDensity();
+    public void onSensorUpdate(Sensor sensor) {
+        if(sensor instanceof Moisture) {
+            Moisture moisture = (Moisture) sensor;
+            double density = moisture.read();
+            if (density < _configuration.getMinimum()) {
+                moisture.resetDensity();
+            }
         }
     }
 

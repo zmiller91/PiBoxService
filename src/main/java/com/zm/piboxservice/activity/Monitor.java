@@ -7,7 +7,9 @@ import com.zm.piboxservice.sensor.Moisture;
 import com.zm.piboxservice.sensor.Photoresistor;
 import com.zm.piboxservice.sensor.Temperature;
 
-public class Monitor implements Activity {
+import java.util.TimerTask;
+
+public class Monitor extends TimerTask implements Activity {
 
     private Photoresistor _photoresistor;
     private Moisture _moisture;
@@ -15,7 +17,7 @@ public class Monitor implements Activity {
     private long time  = 0;
 
     @Override
-    public void call() {
+    public void run() {
         if(System.currentTimeMillis() - time > 3000){
             StringBuilder sb = new StringBuilder();
             sb.append("-------------------------\n");

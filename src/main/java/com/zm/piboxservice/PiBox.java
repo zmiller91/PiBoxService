@@ -29,8 +29,6 @@ public class PiBox {
     public static void main(String[] argv) throws Exception {
         String host = PiBoxConfiguration.Host.TEST.getValue();
         String channel = PiBoxConfiguration.Channel.TEST.getValue();
-        PiBoxService manager = new PiBoxService();
-        new Thread(manager).start();
-        RMQApplication.start(host, channel, manager, PiBoxApi.class, 5);
+        RMQApplication.start(host, channel, new PiBoxService(), PiBoxApi.class, 5);
     }
 }

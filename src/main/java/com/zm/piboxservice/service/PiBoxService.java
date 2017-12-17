@@ -27,19 +27,15 @@ import com.zm.rabbitmqservice.ServiceException;
 
 import java.util.*;
 
-public class PiBoxService implements PiBoxApi, Runnable {
+public class PiBoxService implements PiBoxApi {
 
     private Configuration _configuration;
-    private LinkedList<Activity> _activityQueue;
-    private LinkedList<Sensor> _sensorQueue;
     private Catalog<Activity> _activityCatalog;
     private Catalog<Component> _componentCatalog;
 
     public PiBoxService() {
 
         _configuration = Configuration.instance();
-        _activityQueue = new LinkedList<>();
-        _sensorQueue = new LinkedList<>();
         _activityCatalog = new Catalog<>();
         _componentCatalog = new Catalog<>();
 
@@ -47,42 +43,43 @@ public class PiBoxService implements PiBoxApi, Runnable {
         setupIllumination(monitor);
         setupHVAC(monitor);
         setupIrrigation(monitor);
+        startTimerTask(monitor);
     }
 
     private Monitor setupMonitor() {
         Monitor monitor = new Monitor();
         _activityCatalog.put("monitor", monitor);
-        _activityQueue.add(monitor);
         return monitor;
     }
 
     private void setupIllumination(Monitor monitor) {
-        DefaultComponent light = new DefaultComponent("light", new GPIO(Pinout.LIGHT));
+
         Photoresistor photoresistor = new Photoresistor(new GPIO(Pinout.PHOTORESISTOR));
+
+        DefaultComponent light = new DefaultComponent("light", new GPIO(Pinout.LIGHT));
         Illumination illumination = new Illumination(_configuration.getLightConfiguration(), light, photoresistor);
         _componentCatalog.put("light", light);
         _activityCatalog.put("illumination", illumination);
-        _activityQueue.add(illumination);
-        _sensorQueue.add(photoresistor);
+
+        startTimerTask(illumination);
+        startTimerTask(photoresistor);
         monitor.setPhotoresistor(photoresistor);
     }
 
     private void setupHVAC(Monitor monitor) {
-        Temperature temp = new Temperature(new GPIO(Pinout.TEMPERATURE));
-        HVAC hvac = new HVAC(_configuration.getHVACConfiguration(), temp);
+        HVAC hvac = new HVAC(_configuration.getHVACConfiguration());
+        Temperature temp = new Temperature(new GPIO(Pinout.TEMPERATURE), hvac);
+        startTimerTask(temp);
         _activityCatalog.put("hvac", hvac);
-        _activityQueue.add(hvac);
-        _sensorQueue.add(temp);
         monitor.setTemperatureSensor(temp);
     }
 
     private void setupIrrigation(Monitor monitor) {
-        Moisture moisture = new Moisture(new GPIO(Pinout.MOISTURE));
-        Irrigation irrigation = new Irrigation(_configuration.getIrrigationConfiguration(), moisture);
+        Irrigation irrigation = new Irrigation(_configuration.getIrrigationConfiguration());
+        Moisture moisture = new Moisture(new GPIO(Pinout.MOISTURE), irrigation);
         _activityCatalog.put("irrigation", irrigation);
-        _activityQueue.add(irrigation);
-        _sensorQueue.add(moisture);
         monitor.setMoistureSensor(moisture);
+        startTimerTask(moisture);
     }
 
     @Override
@@ -166,33 +163,7 @@ public class PiBoxService implements PiBoxApi, Runnable {
         }
     }
 
-    @Override
-    public void run() {
-        while(true) {
-            callActivity();
-            callSensor();
-        }
-    }
-
-    private void callActivity() {
-        Activity activity = _activityQueue.poll();
-        try {
-            activity.call();
-        }
-        catch(Exception e) {
-            e.printStackTrace();
-        }
-        _activityQueue.add(activity);
-    }
-
-    private void callSensor() {
-        Sensor sensor = _sensorQueue.poll();
-        try {
-            sensor.call();
-        }
-        catch(Exception e) {
-            e.printStackTrace();
-        }
-        _sensorQueue.add(sensor);
+    private void startTimerTask(TimerTask task) {
+        new Timer().schedule(task, 0, 500);
     }
 }

@@ -2,17 +2,15 @@ package com.zm.piboxservice.activity;
 
 import com.zm.pibox.model.HVACConfiguration;
 import com.zm.piboxservice.database.Configuration;
+import com.zm.piboxservice.sensor.Sensor;
 import com.zm.piboxservice.sensor.Temperature;
 
-public class HVAC implements Activity {
+public class HVAC implements Activity, SensorListener {
 
-    long time = 0;
-    private Temperature _temp;
     private HVACConfiguration _configuration;
 
-    public HVAC(HVACConfiguration configuration, Temperature temp) {
+    public HVAC(HVACConfiguration configuration) {
         _configuration = configuration;
-        _temp = temp;
     }
 
     public void setHVACConfiguration(HVACConfiguration configuration) {
@@ -20,10 +18,13 @@ public class HVAC implements Activity {
     }
 
     @Override
-    public void call() {
-        double t = _temp.read();
-        _temp.usingHeater(t < _configuration.getMinimum());
-        _temp.usingAC(_configuration.getMaximum() < t);
+    public void onSensorUpdate(Sensor sensor) {
+        if(sensor instanceof Temperature) {
+            Temperature temp = (Temperature) sensor;
+            double t = sensor.read();
+            temp.usingHeater(t < _configuration.getMinimum());
+            temp.usingAC(_configuration.getMaximum() < t);
+        }
     }
 
     @Override

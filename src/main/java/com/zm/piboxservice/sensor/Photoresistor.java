@@ -3,8 +3,9 @@ package com.zm.piboxservice.sensor;
 import com.zm.piboxservice.rpi.GPIO;
 
 import java.util.Random;
+import java.util.TimerTask;
 
-public class Photoresistor implements Sensor {
+public class Photoresistor  extends TimerTask implements Sensor {
 
     private GPIO _pin;
     private Random _random;
@@ -24,7 +25,7 @@ public class Photoresistor implements Sensor {
     }
 
     @Override
-    public void call() {
+    public void run() {
 
         int r = _random.nextInt(10000000);
         if(r == 0) {
