@@ -5,8 +5,7 @@ import com.zm.pibox.configuration.PiBoxConfiguration;
 import com.zm.pibox.model.HVACConfiguration;
 import com.zm.pibox.model.IrrigationConfiguration;
 import com.zm.pibox.model.LightConfiguration;
-import com.zm.piboxservice.activity.HVAC;
-import com.zm.rabbitmqservice.ClientException;
+import com.zm.rabbitmqservice.client.ClientException;
 
 import java.sql.Time;
 
@@ -14,7 +13,7 @@ public class RunClient {
 
     public static void main(String[] args) throws Exception{
 
-        PiBoxClient client = new PiBoxClient(PiBoxConfiguration.Host.TEST, PiBoxConfiguration.Channel.TEST, 10);
+        PiBoxClient client = new PiBoxClient(PiBoxConfiguration.Host.TEST, PiBoxConfiguration.Channel.TEST);
         client.setClientTimeout(2000);
         client.setMessageExpiry(2000);
 

@@ -3,6 +3,7 @@ package com.zm.piboxservice.activity;
 import com.zm.pibox.model.HVACConfiguration;
 import com.zm.piboxservice.database.Configuration;
 import com.zm.piboxservice.sensor.Sensor;
+import com.zm.piboxservice.sensor.SensorListener;
 import com.zm.piboxservice.sensor.Temperature;
 
 public class HVAC implements Activity, SensorListener {

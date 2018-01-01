@@ -1,8 +1,6 @@
 package com.zm.piboxservice.service;
 
 
-import com.zm.pbmessenger.PBMessengerClient;
-import com.zm.pbmessenger.configuration.PBMessengerConfiguration;
 import com.zm.pibox.PiBoxApi;
 import com.zm.pibox.model.HVACConfiguration;
 import com.zm.pibox.model.IrrigationConfiguration;
@@ -20,10 +18,9 @@ import com.zm.piboxservice.rpi.PinState;
 import com.zm.piboxservice.rpi.Pinout;
 import com.zm.piboxservice.sensor.Moisture;
 import com.zm.piboxservice.sensor.Photoresistor;
-import com.zm.piboxservice.sensor.Sensor;
 import com.zm.piboxservice.sensor.Temperature;
-import com.zm.rabbitmqservice.ClientException;
-import com.zm.rabbitmqservice.ServiceException;
+import com.zm.rabbitmqservice.client.ClientException;
+import com.zm.rabbitmqservice.service.ServiceException;
 
 import java.util.*;
 

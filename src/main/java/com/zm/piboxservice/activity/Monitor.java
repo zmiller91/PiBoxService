@@ -1,8 +1,6 @@
 package com.zm.piboxservice.activity;
 
-import com.zm.pbmessenger.PBMessengerClient;
 import com.zm.piboxservice.Messenger;
-import com.zm.piboxservice.rpi.GPIO;
 import com.zm.piboxservice.sensor.Moisture;
 import com.zm.piboxservice.sensor.Photoresistor;
 import com.zm.piboxservice.sensor.Temperature;
@@ -26,7 +24,7 @@ public class Monitor extends TimerTask implements Activity {
             sb.append("Temperature:     " + round(_temperature.read()) + "\n");
             sb.append("-------------------------");
 
-            Messenger.instance().log(sb.toString());
+            Messenger.send(sb.toString());
             time = System.currentTimeMillis();
         }
     }

@@ -1,7 +1,5 @@
 package com.zm.piboxservice.sensor;
 
-import com.zm.piboxservice.activity.Activity;
-import com.zm.piboxservice.activity.SensorListener;
 import com.zm.piboxservice.rpi.GPIO;
 
 import java.util.Random;

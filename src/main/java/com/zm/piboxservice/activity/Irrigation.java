@@ -4,6 +4,7 @@ import com.zm.pibox.model.IrrigationConfiguration;
 import com.zm.piboxservice.database.Configuration;
 import com.zm.piboxservice.sensor.Moisture;
 import com.zm.piboxservice.sensor.Sensor;
+import com.zm.piboxservice.sensor.SensorListener;
 
 public class Irrigation implements Activity, SensorListener {
 

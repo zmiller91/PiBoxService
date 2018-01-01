@@ -19,7 +19,7 @@ package com.zm.piboxservice;
 import com.zm.pibox.PiBoxApi;
 import com.zm.pibox.configuration.PiBoxConfiguration;
 import com.zm.piboxservice.service.PiBoxService;
-import com.zm.rabbitmqservice.RMQApplication;
+import com.zm.rabbitmqservice.service.RMQApplication;
 
 /**
  *
@@ -29,6 +29,6 @@ public class PiBox {
     public static void main(String[] argv) throws Exception {
         String host = PiBoxConfiguration.Host.TEST.getValue();
         String channel = PiBoxConfiguration.Channel.TEST.getValue();
-        RMQApplication.start(host, channel, new PiBoxService(), PiBoxApi.class, 5);
+        RMQApplication.start(host, channel, new PiBoxService(), PiBoxApi.class);
     }
 }
